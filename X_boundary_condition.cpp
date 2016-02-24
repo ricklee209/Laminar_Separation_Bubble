@@ -80,10 +80,10 @@ double (*J)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 					+p[4]*pow(eta,1)\
 					+p[5]*pow(eta,0);
 
-				V = YY*U0;
+				U = YY*U0;
 
 				rho = 1.1842;
-				U = 0.0;
+				V = 0.0;
 				W = 0.0;
 				P = 101300.0;
 

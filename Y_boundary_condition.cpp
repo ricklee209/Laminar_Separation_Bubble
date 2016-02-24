@@ -139,7 +139,7 @@ void Y_boundary_condition
 			U2_[i][nyy][k] = U2_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
 			U3_[i][nyy][k] = rho*V/J[i][ny][k];
 			U4_[i][nyy][k] = U2_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
-			U5_[i][nyy][k] = ( P/(K-1.0)+0.5*rho*VV )/J[i][ny][k];
+			U5_[i][nyy][k] = ( P/(K-1.0)+0.5*rho*VV )/J[i][nyy][k];
 
 			U1_[i][nyyy][k] = U1_[i][ny-1][k]*J[i][ny-1][k]/J[i][nyyy][k];
 			U2_[i][nyyy][k] = -U2_[i][ny-1][k]*J[i][ny-1][k]/J[i][nyyy][k];

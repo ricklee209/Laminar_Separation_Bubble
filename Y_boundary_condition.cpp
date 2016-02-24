@@ -124,7 +124,7 @@ void Y_boundary_condition
 			rho = U1_[i][ny][k]/J[i][ny][k];
 			U = U2_[i][ny][k]/U1_[i][ny][k];
 
-			temp = ( (i+gstart[myid])*deltaXI-1.5*high )/(0.12*high);
+			temp = ( (i+gstart[myid])*deltaXI-(1.5*high+nx_inlet*deltaXI) )/(0.12*high);
 
 			V = 0.7*U0*exp(-temp*temp);
 
@@ -132,20 +132,20 @@ void Y_boundary_condition
 
 			W = U3[i][ny][k]/U1_[i][ny][k];   
 			VV = U*U+V*V+W*W;
-			P = (U5_[i][2][k]*J[i][2][k]-0.5*rho*VV)*(K-1);
+			P = (U5_[i][ny][k]*J[i][ny][k]-0.5*rho*VV)*(K-1);
 
 
 			U1_[i][nyy][k] = U1_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
 			U2_[i][nyy][k] = U2_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
-			U3_[i][nyy][k] = rho*V/J[i][ny][k];
-			U4_[i][nyy][k] = U2_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
+			U3_[i][nyy][k] = rho*V/J[i][nyy][k];
+			U4_[i][nyy][k] = U4_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
 			U5_[i][nyy][k] = ( P/(K-1.0)+0.5*rho*VV )/J[i][nyy][k];
 
-			U1_[i][nyyy][k] = U1_[i][ny-1][k]*J[i][ny-1][k]/J[i][nyyy][k];
-			U2_[i][nyyy][k] = -U2_[i][ny-1][k]*J[i][ny-1][k]/J[i][nyyy][k];
-			U3_[i][nyyy][k] = -U3_[i][ny-1][k]*J[i][ny-1][k]/J[i][nyyy][k];
-			U4_[i][nyyy][k] = -U4_[i][ny-1][k]*J[i][ny-1][k]/J[i][nyyy][k];
-			U5_[i][nyyy][k] = U5_[i][ny-1][k]*J[i][ny-1][k]/J[i][nyyy][k];
+			U1_[i][nyyy][k] = U1_[i][nyy][k]*J[i][nyy][k]/J[i][nyyy][k];
+			U2_[i][nyyy][k] = U2_[i][nyy][k]*J[i][nyy][k]/J[i][nyyy][k];
+			U3_[i][nyyy][k] = U3_[i][nyy][k]*J[i][nyy][k]/J[i][nyyy][k];
+			U4_[i][nyyy][k] = U4_[i][nyy][k]*J[i][nyy][k]/J[i][nyyy][k];
+			U5_[i][nyyy][k] = U5_[i][nyy][k]*J[i][nyy][k]/J[i][nyyy][k];
 			
 		}
 	}

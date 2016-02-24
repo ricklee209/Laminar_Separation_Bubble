@@ -179,10 +179,10 @@ double (*MR5)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 
 					
 					U1q[i][j][k] = -U_in_1*( U1_[i][j][k]*J[i][j][k]-U1_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho-1.1842);
-					U2q[i][j][k] = -U_in_1*( U2_[i][j][k]*J[i][j][k]-U2_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*u);
+					U2q[i][j][k] = -U_in_1*( U2_[i][j][k]*J[i][j][k]-U2_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*u-1.1842*U0);
 					U3q[i][j][k] = -U_in_1*( U3_[i][j][k]*J[i][j][k]-U3_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*v);
 					U4q[i][j][k] = -U_in_1*( U4_[i][j][k]*J[i][j][k]-U4_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*w);
-					U5q[i][j][k] = -U_in_1*( U5_[i][j][k]*J[i][j][k]-U5_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(U5_[i][j][k]*J[i][j][k]-253250.0);
+					U5q[i][j][k] = -U_in_1*( U5_[i][j][k]*J[i][j][k]-U5_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(U5_[i][j][k]*J[i][j][k]-253250.0-0.5*1.1842*U0*U0);
 
 
 					//if(j ==2 && k == 2) printf("%f\t%f\t%f\n",U_in_1, Sigma_in,high);
@@ -238,10 +238,10 @@ double (*MR5)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 					
 					
 					U1q[i][j][k] = -U_out_1*( U1_[i][j][k]*J[i][j][k]-U1_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho-1.1842);
-					U2q[i][j][k] = -U_out_1*( U2_[i][j][k]*J[i][j][k]-U2_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*u);
+					U2q[i][j][k] = -U_out_1*( U2_[i][j][k]*J[i][j][k]-U2_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*u-1.1842*U0);
 					U3q[i][j][k] = -U_out_1*( U3_[i][j][k]*J[i][j][k]-U3_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*v);
 					U4q[i][j][k] = -U_out_1*( U4_[i][j][k]*J[i][j][k]-U4_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*w);
-					U5q[i][j][k] = -U_out_1*( U5_[i][j][k]*J[i][j][k]-U5_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(U5_[i][j][k]*J[i][j][k]-253250.0);
+					U5q[i][j][k] = -U_out_1*( U5_[i][j][k]*J[i][j][k]-U5_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(U5_[i][j][k]*J[i][j][k]-253250.0-0.5*1.1842*U0*U0);
 					
 					
 					//if(j ==2 && k == 2) printf("%f\t%f\t%f\n",U_out_1, Sigma_out,C_plan);

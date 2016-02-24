@@ -141,14 +141,12 @@ double (*MR5)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 	double rho,U,V,W,VV,P,C,T,H;
 	double u,v,w,beta;
 
-
-
-	if( (gstart[myid]) < nx_inlet ) {
+	if( (gstart[myid]) <= nx_inlet-1 ) {
 	
 //// ============================================ ////
 		istart =  3;	
 //// ============================================ ////
-		if ( (gend0[myid]) < nx_inlet )
+		if ( (gend0[myid]) <= nx_inlet-1 )
 			iend = gend[myid];
 		else
 			iend = nx_inlet-gstart[myid]+2;
@@ -175,17 +173,19 @@ double (*MR5)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 
 					C_plan = 0.5*sqrt(u*u*(beta-1)*(beta-1)+4*beta*C);
 					
-					U_in_1 = pow( (((nx_inlet-gstart[myid]-0.5)*1.0)/nx_inlet), 3.0 )* U_in_0*C_plan;
+					U_in_1 = pow( ((nx_inlet-(i-2-gstart[myid]-0.5)*1.0)/nx_inlet), 3.0 )* U_in_0*C_plan;
 					
 					Sigma_in = Sigma_in_0*U_in_1/high;
 
 					
 					U1q[i][j][k] = -U_in_1*( U1_[i][j][k]*J[i][j][k]-U1_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho-1.1842);
-					U1q[i][j][k] = -U_in_1*( U2_[i][j][k]*J[i][j][k]-U2_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*u);
-					U1q[i][j][k] = -U_in_1*( U3_[i][j][k]*J[i][j][k]-U3_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*v);
-					U1q[i][j][k] = -U_in_1*( U4_[i][j][k]*J[i][j][k]-U4_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*w);
-					U1q[i][j][k] = -U_in_1*( U5_[i][j][k]*J[i][j][k]-U5_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(U5_[i][j][k]*J[i][j][k]-253250.0);
-					
+					U2q[i][j][k] = -U_in_1*( U2_[i][j][k]*J[i][j][k]-U2_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*u);
+					U3q[i][j][k] = -U_in_1*( U3_[i][j][k]*J[i][j][k]-U3_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*v);
+					U4q[i][j][k] = -U_in_1*( U4_[i][j][k]*J[i][j][k]-U4_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(rho*w);
+					U5q[i][j][k] = -U_in_1*( U5_[i][j][k]*J[i][j][k]-U5_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_in*(U5_[i][j][k]*J[i][j][k]-253250.0);
+
+
+					//if(j ==2 && k == 2) printf("%f\t%f\t%f\n",U_in_1, Sigma_in,high);
 					
 				}
 			}
@@ -196,22 +196,20 @@ double (*MR5)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 	}
 
 
-
-
-
 	
-	if (gend0[myid] > (X_out-nx_outlet-1)) {
+	if ( gend0[myid] >= (X_out-nx_outlet) ) {
 
 //// ============================================ ////
 
-		if ( (gstart[myid]) > (X_out-nx_outlet-1))
+		if ( (gstart[myid]) >= (X_out-nx_outlet))
 			istart =  3;	
 		else 
-			istart =  (X_out-nx_outlet)-gstart[myid]+2;
+			istart = (X_out-nx_outlet)+3-gstart[myid];
 
 //// ============================================ ////
 		iend = gend[myid];			    		  ////
 //// ============================================ ////
+
 
 		for (i = istart ; i <= iend; i++) {
 			
@@ -233,18 +231,20 @@ double (*MR5)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 
 					C_plan = 0.5*sqrt(u*u*(beta-1)*(beta-1)+4*beta*C);
 					
-					U_out_1 = pow( (((i+gstart[myid]-0.5-(nx-nx_outlet))*1.0)/nx_outlet), 3.0 )* U_out_0*C_plan;
+					U_out_1 = pow( (((i-2+gstart[myid]-0.5-(X_out-nx_outlet))*1.0)/nx_outlet), 3.0 )* U_out_0*C_plan;
 
 					Sigma_out = Sigma_out_0*U_out_1/high;
 					
 					
 					
 					U1q[i][j][k] = -U_out_1*( U1_[i][j][k]*J[i][j][k]-U1_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho-1.1842);
-					U1q[i][j][k] = -U_out_1*( U2_[i][j][k]*J[i][j][k]-U2_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*u);
-					U1q[i][j][k] = -U_out_1*( U3_[i][j][k]*J[i][j][k]-U3_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*v);
-					U1q[i][j][k] = -U_out_1*( U4_[i][j][k]*J[i][j][k]-U4_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*w);
-					U1q[i][j][k] = -U_out_1*( U5_[i][j][k]*J[i][j][k]-U5_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(U5_[i][j][k]*J[i][j][k]-253250.0);
+					U2q[i][j][k] = -U_out_1*( U2_[i][j][k]*J[i][j][k]-U2_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*u);
+					U3q[i][j][k] = -U_out_1*( U3_[i][j][k]*J[i][j][k]-U3_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*v);
+					U4q[i][j][k] = -U_out_1*( U4_[i][j][k]*J[i][j][k]-U4_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(rho*w);
+					U5q[i][j][k] = -U_out_1*( U5_[i][j][k]*J[i][j][k]-U5_[i-1][j][k]*J[i-1][j][k] )/deltaXI-Sigma_out*(U5_[i][j][k]*J[i][j][k]-253250.0);
 					
+					
+					//if(j ==2 && k == 2) printf("%f\t%f\t%f\n",U_out_1, Sigma_out,C_plan);
 					
 					
 				}

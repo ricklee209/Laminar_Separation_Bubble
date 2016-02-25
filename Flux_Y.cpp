@@ -466,7 +466,7 @@ double (*EpY)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 				inFy4[i][j][k] = 0.5*((_rho*_w*_V+rho_*w_*V_+etz*(_P+P_))-Fav4/insqr)/J_v[i][j][k];
 				inFy5[i][j][k] = 0.5*((_V*(3.5*_P+0.5*_rho*_VV)+V_*(3.5*P_+0.5*rho_*VV_))-Fav5/insqr)/J_v[i][j][k];
 				
-				if (j==1 | j==ny) {
+				if (j==1) {
 
 					inFy1[i][j][k] = 0;
 					inFy2[i][j][k] = 0;

@@ -46,8 +46,8 @@ int main(int argc, char **argv)
 
 	int statistic_step = 5000;
 	int iteration_end_step = 200;
-	int output_step = 10;
-	int count = 10;
+	int output_step = 1;
+	int count = 1;
 	int step;
 
 	int switch_initial = 0; // ---- 1 reading initial coniditon ---- //
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 	int switch_output = 0;  // ---- 1 output grid file ---- //
 
 	
-	double deltaT = 0.0000002;
+	double deltaT = 0.0000001;
 	double Ep = 0.1;
 	double Roe_criterion = 0.005;
 	double E_high = 0.009;
@@ -373,13 +373,13 @@ int X_np = gcount[myid]+6;    /**** How many cells in X-direction for each CPU *
 #pragma omp parallel for private(k)
 			for (j = 2; j < nyy; j++) { 
 				for (k = 2; k < nzz; k++) {
-
+					/*
 					U1q[i][j][k] = U1[i][j][k]; 
 					U2q[i][j][k] = U2[i][j][k]; 
 					U3q[i][j][k] = U3[i][j][k]; 
 					U4q[i][j][k] = U4[i][j][k]; 
 					U5q[i][j][k] = U5[i][j][k];
-
+					*/
 					U1[i][j][k] = U1_[i][j][k]; 
 					U2[i][j][k] = U2_[i][j][k]; 
 					U3[i][j][k] = U3_[i][j][k]; 

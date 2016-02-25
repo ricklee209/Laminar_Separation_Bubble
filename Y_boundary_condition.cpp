@@ -69,7 +69,7 @@ void Y_boundary_condition
 		else iend = gend[myid]+3;				  ////
 //// ============================================ ////
 
-//#pragma omp parallel for private(k,rho,U,V,W,VV,P,temp,T)
+#pragma omp parallel for private(k,rho,U,V,W,VV,P,temp,T)
 	for (i = istart; i <= iend; i++) {
 		for (k = 2; k <= nz; k++) {
 			
@@ -121,14 +121,12 @@ void Y_boundary_condition
 
 
 
-			rho = U1_[i][ny][k]/J[i][ny][k];
+			rho = U1_[i][ny][k]*J[i][ny][k];
 			U = U2_[i][ny][k]/U1_[i][ny][k];
 
 			temp = ( (i+gstart[myid])*deltaXI-(1.5*high+nx_inlet*deltaXI) )/(0.12*high);
 
 			V = 0.7*U0*exp(-temp*temp);
-
-			//if(k == 2) printf("%d\t%f\t%f\n",myid,V,(i+gstart[myid])*1.0);
 
 			W = U3[i][ny][k]/U1_[i][ny][k];   
 			VV = U*U+V*V+W*W;
@@ -140,6 +138,10 @@ void Y_boundary_condition
 			U3_[i][nyy][k] = rho*V/J[i][nyy][k];
 			U4_[i][nyy][k] = U4_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
 			U5_[i][nyy][k] = ( P/(K-1.0)+0.5*rho*VV )/J[i][nyy][k];
+
+			
+			if(k == 2) printf("%d\t%f\t%f\n",myid,V/30,(i+gstart[myid])*1.0);
+
 
 			U1_[i][nyyy][k] = U1_[i][nyy][k]*J[i][nyy][k]/J[i][nyyy][k];
 			U2_[i][nyyy][k] = U2_[i][nyy][k]*J[i][nyy][k]/J[i][nyyy][k];

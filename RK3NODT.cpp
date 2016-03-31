@@ -126,7 +126,7 @@ double (*MR5)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 
 	double C_plan;
 
-	double U_in_0 = 1.15;
+	double U_in_0 = 1.15, V_out_0 = 1.15;
 	
 	double Sigma_in_0 = 0.035;
 
@@ -134,12 +134,67 @@ double (*MR5)[Y_m][Z_m] = new double[X_np][Y_m][Z_m]
 	
 	double Sigma_out_0 = 1.25;
 	
-	double U_in_1, U_out_1;
+	double U_in_1, U_out_1, V_out_1;
 	
 	double Sigma_in, Sigma_out;
 
 	double rho,U,V,W,VV,P,C,T,H;
 	double u,v,w,beta;
+
+
+	
+// =================== //
+	istart = 3;        //
+	iend = gend[myid]; //
+// =================== //
+	
+	
+		for (i = istart ; i <= iend; i++) {
+				
+	//#pragma omp parallel for private(C_plan,beta,k,rho,u,v,w,VV,P,V_out_1,Sigma_out)
+				for (j = ny-ny_abs+2; j <= ny; j++) {
+					for (k = 2; k <= nz; k++) {
+
+						rho = U1_[i][j][k]*J[i][j][k];
+						u = U2_[i][j][k]/U1_[i][j][k];
+						v = U3_[i][j][k]/U1_[i][j][k];
+						w = U4_[i][j][k]/U1_[i][j][k];     
+						VV = u*u+v*v+w*w;
+						P = (U5_[i][j][k]-0.5*rho*VV)*(K-1);
+						C = K*P/rho;
+						
+						
+						/* preconditioning */
+						beta = max(VV/C,e);
+
+						C_plan = 0.5*sqrt(v*v*(beta-1)*(beta-1)+4*beta*C);
+						
+						V_out_1 = pow( (j-(ny-ny_abs+1)-0.5)/ny_abs, 3.0 )* V_out_0*C_plan;
+						
+						Sigma_out = Sigma_out_0*V_out_1/high;
+						
+						//if(i==3 && k ==2) printf("%d\t%d\t%f\n",myid,j,V_out_1);
+						
+						U1q[i][j][k] = -(V_out_1*( U1_[i][j][k]*J[i][j][k]-U1_[i][j-1][k]*J[i][j-1][k] )/deltaET+Sigma_out*(rho-1.1842));
+						U2q[i][j][k] = -(V_out_1*( U2_[i][j][k]*J[i][j][k]-U2_[i][j-1][k]*J[i][j-1][k] )/deltaET+Sigma_out*(rho*u));
+						U3q[i][j][k] = -(V_out_1*( U3_[i][j][k]*J[i][j][k]-U3_[i][j-1][k]*J[i][j-1][k] )/deltaET+Sigma_out*(rho*v));
+						U4q[i][j][k] = -(V_out_1*( U4_[i][j][k]*J[i][j][k]-U4_[i][j-1][k]*J[i][j-1][k] )/deltaET+Sigma_out*(rho*w));
+						U5q[i][j][k] = -(V_out_1*( U5_[i][j][k]*J[i][j][k]-U5_[i][j-1][k]*J[i][j-1][k] )/deltaET+Sigma_out*(U5_[i][j][k]*J[i][j][k]-253250.0));
+						
+						
+					}
+				}
+
+	#pragma omp barrier
+
+		}		
+		
+		
+
+
+
+
+
 
 	if( (gstart[myid]) <= nx_inlet-1 ) {
 	

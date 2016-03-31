@@ -121,26 +121,28 @@ void Y_boundary_condition
 
 
 
-			rho = U1_[i][ny][k]*J[i][ny][k];
-			U = U2_[i][ny][k]/U1_[i][ny][k];
+			rho = U1_[i][ny-ny_abs+1][k]*J[i][ny-ny_abs+1][k];
 
 			temp = ( (i+gstart[myid])*deltaXI-(1.5*high+nx_inlet*deltaXI) )/(0.12*high);
 
 			V = 0.7*U0*exp(-temp*temp);
 
-			W = U3[i][ny][k]/U1_[i][ny][k];   
-			VV = U*U+V*V+W*W;
-			P = (U5_[i][ny][k]*J[i][ny][k]-0.5*rho*VV)*(K-1);
-
-
-			U1_[i][nyy][k] = U1_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
-			U2_[i][nyy][k] = U2_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
-			U3_[i][nyy][k] = rho*V/J[i][nyy][k];
-			U4_[i][nyy][k] = U4_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
-			U5_[i][nyy][k] = ( P/(K-1.0)+0.5*rho*VV )/J[i][nyy][k];
+			U3_[i][ny-ny_abs+1][k] = rho*V/J[i][ny-ny_abs+1][k];
 
 			
-			if(k == 2) printf("%d\t%f\t%f\n",myid,V/30,(i+gstart[myid])*1.0);
+			//if(k == 2) printf("%d\t%f\t%f\n",myid,V/30,(i+gstart[myid])*1.0);
+
+			U1_[i][nyy][k] = 1.1842/J[i][nyy][k];
+			U2_[i][nyy][k] = 1.1842*U0/J[i][nyy][k];
+			U3_[i][nyy][k] = 1.1842*V/J[i][nyy][k];
+			U4_[i][nyy][k] = 0.0/J[i][nyy][k];
+			U5_[i][nyy][k] = (253250+0.5*1.1842*(U0*U0+V*V))/J[i][nyy][k];
+			
+			//U1_[i][nyy][k] = U1_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
+			//U2_[i][nyy][k] = U2_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
+			//U3_[i][nyy][k] = U3_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
+			//U4_[i][nyy][k] = U4_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
+			//U5_[i][nyy][k] = U5_[i][ny][k]*J[i][ny][k]/J[i][nyy][k];
 
 
 			U1_[i][nyyy][k] = U1_[i][nyy][k]*J[i][nyy][k]/J[i][nyyy][k];
